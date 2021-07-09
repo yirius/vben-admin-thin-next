@@ -4,10 +4,10 @@ import { LoginParams, LoginResultModel, GetUserInfoModel } from './model/userMod
 import { ErrorMessageMode } from '/#/axios';
 
 enum Api {
-  Login = '/login',
-  Logout = '/logout',
-  GetUserInfo = '/getUserInfo',
-  GetPermCode = '/getPermCode',
+  Login = '/thinker/admin/login',
+  Logout = '/thinker/admin/logout',
+  GetUserInfo = '/thinker/admin/getUserInfo',
+  GetPermCode = '/thinker/admin/getUserRole',
 }
 
 /**

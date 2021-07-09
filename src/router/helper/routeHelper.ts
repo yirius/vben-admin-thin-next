@@ -16,6 +16,15 @@ LayoutMap.set('IFRAME', IFRAME);
 
 let dynamicViewsModules: Record<string, () => Promise<Recordable>>;
 
+// Dynamic use sfc-loader
+let sfcLoaderModule;
+const asyncLoadModuleWithI18n = async (component: string) => {
+  if (!sfcLoaderModule) {
+    sfcLoaderModule = await import('/@/thinker-ui/sfc-loader');
+  }
+  return sfcLoaderModule.asyncLoadModule(component + '.vue', sfcLoaderModule.loadModuleOptions);
+};
+
 // Dynamic introduction
 function asyncImportRoute(routes: AppRouteRecordRaw[] | undefined) {
   dynamicViewsModules = dynamicViewsModules || import.meta.glob('../../views/**/*.{vue,tsx}');
@@ -32,6 +41,10 @@ function asyncImportRoute(routes: AppRouteRecordRaw[] | undefined) {
         item.component = layoutFound;
       } else {
         item.component = dynamicImport(dynamicViewsModules, component as string);
+        // 如果当前文件里没有，那就说明应该是从远端获取
+        if (!item.component) {
+          item.component = () => asyncLoadModuleWithI18n(component);
+        }
       }
     } else if (name) {
       item.component = getParentLayout();

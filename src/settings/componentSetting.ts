@@ -11,24 +11,26 @@ export default {
       // The field name of the current page passed to the background
       pageField: 'page',
       // The number field name of each page displayed in the background
-      sizeField: 'pageSize',
+      sizeField: 'limit',
       // Field name of the form data returned by the interface
       listField: 'items',
       // Total number of tables returned by the interface field name
       totalField: 'total',
     },
     // Number of pages that can be selected
-    pageSizeOptions: ['10', '50', '80', '100'],
+    pageSizeOptions: ['10', '50', '100', '500', '1000', '3000'],
     // Default display quantity on one page
     defaultPageSize: 10,
+    // 显示表格配置
+    defaultShowTableSetting: true,
     // Custom general sort function
     defaultSortFn: (sortInfo: SorterResult) => {
       const { field, order } = sortInfo;
       return {
         // The sort field passed to the backend you
-        field,
+        sort: field,
         // Sorting method passed to the background asc/desc
-        order,
+        order: order ? (order == 'ascend' ? 'asc' : 'desc') : '',
       };
     },
     // Custom general filter function

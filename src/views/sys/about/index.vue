@@ -1,7 +1,7 @@
 <template>
   <PageWrapper title="关于">
     <template #headerContent>
-      <div class="flex justify-between items-center">
+      <div class="flex items-center justify-between">
         <span class="flex-1">
           <a :href="GITHUB_URL" target="_blank">{{ name }}</a>
           是一个基于Vue3.0、Vite、 Ant-Design-Vue 、TypeScript

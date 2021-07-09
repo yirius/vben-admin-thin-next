@@ -41,18 +41,18 @@ const transform: AxiosTransform = {
     }
     // 错误的时候返回
 
-    const { data } = res;
-    if (!data) {
+    const resData = res.data;
+    if (!resData) {
       // return '[HTTP] Request has no return value';
       throw new Error(t('sys.api.apiRequestFailed'));
     }
     //  这里 code，result，message为 后台统一的字段，需要在 types.ts内修改为项目自己的接口返回格式
-    const { code, result, message } = data;
+    const { code, data, msg } = resData;
 
     // 这里逻辑可以根据项目进行修改
-    const hasSuccess = data && Reflect.has(data, 'code') && code === ResultEnum.SUCCESS;
+    const hasSuccess = resData && Reflect.has(resData, 'code') && code === ResultEnum.SUCCESS;
     if (hasSuccess) {
-      return result;
+      return data;
     }
 
     // 在此处根据自己项目的实际情况对不同的code执行不同的操作
@@ -63,8 +63,8 @@ const transform: AxiosTransform = {
         timeoutMsg = t('sys.api.timeoutMessage');
         break;
       default:
-        if (message) {
-          timeoutMsg = message;
+        if (msg) {
+          timeoutMsg = msg;
         }
     }
 
@@ -136,7 +136,7 @@ const transform: AxiosTransform = {
     const token = getToken();
     if (token && (config as Recordable)?.requestOptions?.withToken !== false) {
       // jwt token
-      config.headers.Authorization = options.authenticationScheme
+      config.headers['Access-Token'] = options.authenticationScheme
         ? `${options.authenticationScheme} ${token}`
         : token;
     }
@@ -201,9 +201,9 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
         // baseURL: globSetting.apiUrl,
         // 接口可能会有通用的地址部分，可以统一抽取出来
         urlPrefix: urlPrefix,
-        headers: { 'Content-Type': ContentTypeEnum.JSON },
+        // headers: { 'Content-Type': ContentTypeEnum.JSON },
         // 如果是form-data格式
-        // headers: { 'Content-Type': ContentTypeEnum.FORM_URLENCODED },
+        headers: { 'Content-Type': ContentTypeEnum.FORM_URLENCODED },
         // 数据处理方式
         transform,
         // 配置项，下面的选项都可以在独立的接口请求中覆盖
